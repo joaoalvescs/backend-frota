@@ -31,5 +31,16 @@ public interface VeiculoRepository extends org.springframework.data.repository.C
     @Transactional
     @Query(value = "DELETE FROM veiculo WHERE id = :id", nativeQuery = true)
     void apagarVeiculo(@Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE veiculo SET modelo = :modelo, fabricante = :fabricante, ano = :ano, preco = :preco WHERE id = :id", nativeQuery = true)
+    int atualizarVeiculo(
+        @Param("id") Long id,
+        @Param("modelo") String modelo, 
+        @Param("fabricante") String fabricante, 
+        @Param("ano") String ano, 
+        @Param("preco") double preco
+    );
 }
 
