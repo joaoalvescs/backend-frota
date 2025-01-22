@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -66,10 +67,29 @@ public class VeiculoController {
             if (resultado == 0) {
                 return ResponseEntity.status(404).body("Veículo não encontrado.");
             }
-            
+
             return ResponseEntity.ok("Veículo atualizado com sucesso.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Erro ao atualizar o veículo: " + e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/filtrar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Veiculo>> filtrarVeiculos(
+        @RequestParam(required = false) String modelo,
+        @RequestParam(required = false) String fabricante,
+        @RequestParam(required = false) String ano
+    ) {
+        System.out.println("Modelo: " + modelo); 
+        System.out.println("Fabricante: " + fabricante);
+        System.out.println("Ano: " + ano);
+
+        try {
+            List<Veiculo> veiculos = veiculoRepository.filtrarVeiculos(modelo, fabricante, ano);
+            return ResponseEntity.ok(veiculos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
         }
     }
 }

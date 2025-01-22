@@ -42,5 +42,13 @@ public interface VeiculoRepository extends org.springframework.data.repository.C
         @Param("ano") String ano, 
         @Param("preco") double preco
     );
-}
 
+    @Query(value = "SELECT * FROM veiculo WHERE (:modelo IS NULL OR modelo LIKE %:modelo%)" +
+                " AND (:fabricante IS NULL OR fabricante LIKE %:fabricante%)" +
+                " AND (:ano IS NULL OR ano LIKE %:ano%)", nativeQuery = true)
+    List<Veiculo> filtrarVeiculos(
+        @Param("modelo") String modelo, 
+        @Param("fabricante") String fabricante, 
+        @Param("ano") String ano
+    );
+}
