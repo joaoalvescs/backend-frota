@@ -1,4 +1,4 @@
-package net.javaguides.backend_frota;
+package com.joao.backend_frota;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
