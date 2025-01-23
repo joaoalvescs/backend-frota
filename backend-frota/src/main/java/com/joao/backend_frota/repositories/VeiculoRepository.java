@@ -51,4 +51,12 @@ public interface VeiculoRepository extends org.springframework.data.repository.C
         @Param("fabricante") String fabricante, 
         @Param("ano") String ano
     );
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO veiculo (modelo, fabricante, ano, preco) VALUES (:modelo, :fabricante, :ano, :preco)", nativeQuery = true)
+    void insertVeiculo(String modelo, String fabricante, int ano, double preco);
+
+    @Query(value = "SELECT LAST_INSERT_ID()", nativeQuery = true)
+    Long getLastInsertedId();
 }

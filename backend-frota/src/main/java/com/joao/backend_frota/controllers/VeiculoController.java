@@ -80,10 +80,6 @@ public class VeiculoController {
         @RequestParam(required = false) String fabricante,
         @RequestParam(required = false) String ano
     ) {
-        System.out.println("Modelo: " + modelo); 
-        System.out.println("Fabricante: " + fabricante);
-        System.out.println("Ano: " + ano);
-
         try {
             List<Veiculo> veiculos = veiculoRepository.filtrarVeiculos(modelo, fabricante, ano);
             return ResponseEntity.ok(veiculos);

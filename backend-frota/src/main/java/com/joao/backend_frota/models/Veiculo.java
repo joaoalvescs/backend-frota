@@ -29,6 +29,7 @@ public class Veiculo implements Serializable {
     @Column(nullable = false)
     private String ano;
 
+    @NotEmpty(message = "O preço é obrigatório.")
     @Column(nullable = false)
     private double preco;
 
