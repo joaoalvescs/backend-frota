@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joao.backend_frota.dto.CarroComVeiculoDto;
@@ -126,6 +127,21 @@ public class CarroController {
             } else {
                 return ResponseEntity.status(404).body(null);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @Operation(summary = "Filtrar carros por modelo, fabricante e ano", description = "Filtra os carros com base nos parâmetros fornecidos: modelo, fabricante e ano.")
+    @GetMapping(value = "/filtrar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CarroComVeiculoDto>> filtrarCarrosPorModeloFabricanteAno(
+            @RequestParam(required = false) String modelo,
+            @RequestParam(required = false) String fabricante,
+            @RequestParam(required = false) Integer ano) {
+        try {
+            List<CarroComVeiculoDto> carrosFiltrados = carroRepository.findCarrosByFiltro(modelo, fabricante, ano);
+            return ResponseEntity.ok(carrosFiltrados);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(null);
