@@ -19,12 +19,17 @@ import com.joao.backend_frota.dto.VeiculoDto;
 import com.joao.backend_frota.models.Veiculo;
 import com.joao.backend_frota.repositories.VeiculoRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/veiculo")
+@Tag(name = "Veículo", description = "Gerenciamento de Veículos")
 public class VeiculoController {
     @Autowired
     VeiculoRepository veiculoRepository;
 
+    @Operation(summary = "Consultar todos os veículos.", description = "Consulta todos os veículos cadastrados.")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Veiculo>> consultarTodosVeiculos() {
         try {
@@ -35,6 +40,7 @@ public class VeiculoController {
         }
     }
 
+    @Operation(summary = "Criar um veículo.", description = "Cria um veículo específico com os atributos: modelo, fabricante, ano e preço.")
     @PostMapping(value = "/criar", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> criarVeiculo(@RequestBody Veiculo veiculo) {
         try {
@@ -50,6 +56,7 @@ public class VeiculoController {
         }
     }
 
+    @Operation(summary = "Apagar um veículo pelo ID.", description = "Apaga um veículo específico pelo ID fornecido.")
     @DeleteMapping(value = "/apagar/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> apagarVeiculo(@PathVariable Long id) {
         try {
@@ -60,6 +67,7 @@ public class VeiculoController {
         }
     }
 
+    @Operation(summary = "Atualizar um veículo específico.", description = "Atualiza um veículo pelo ID e seus atributos.")
     @PutMapping(value = "/atualizar/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> atualizarVeiculo(@PathVariable Long id, @RequestBody Veiculo veiculo) {
         try {
@@ -75,6 +83,7 @@ public class VeiculoController {
         }
     }
 
+    @Operation(summary = "Filtrar veículos pelas suas características.", description = "Filtra veículos por ano, modelo e fabricante.")
     @GetMapping(value = "/filtrar", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Veiculo>> filtrarVeiculos(
         @RequestParam(required = false) String modelo,
@@ -90,6 +99,7 @@ public class VeiculoController {
         }
     }
 
+    @Operation(summary = "Consultar um carro pelo ID.", description = "Consulta um veículo pelo ID e retorna seus atributos.")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VeiculoDto> consultarVeiculoPorId(@PathVariable Long id) {
         try {

@@ -18,8 +18,12 @@ import com.joao.backend_frota.dto.MotoVeiculoDto;
 import com.joao.backend_frota.repositories.MotoRepository;
 import com.joao.backend_frota.repositories.VeiculoRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/moto")
+@Tag(name = "Moto", description = "Gerenciamento de Motos")
 public class MotoController {
 
     @Autowired
@@ -28,6 +32,7 @@ public class MotoController {
     @Autowired
     private VeiculoRepository veiculoRepository;
 
+     @Operation(summary = "Consultar todas as motos", description = "Consulta todos as motos cadastradas.")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MotoComVeiculoDto>> consultarTodosMotosComVeiculo() {
         try {
@@ -39,6 +44,7 @@ public class MotoController {
         }
     }
 
+    @Operation(summary = "Criar uma moto.", description = "Cria uma moto específica com cilindradas.")
     @PostMapping(value = "/criar", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> criarMotoComVeiculo(@RequestBody MotoVeiculoDto request) {
         try {
@@ -69,6 +75,7 @@ public class MotoController {
         }
     }
 
+    @Operation(summary = "Atualizar uma moto específica.", description = "Atualiza uma moto pelo ID junto com os atributos de moto e veículo.")
     @PutMapping(value = "/atualizar", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> atualizarMotoComVeiculo(@RequestBody MotoVeiculoDto request) {
         try {
@@ -100,6 +107,7 @@ public class MotoController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Consultar uma moto pelo ID.", description = "Consulta uma moto pelo ID e retorna os atributos de moto e veículo.")
     public ResponseEntity<MotoComVeiculoDto> consultarMotoPorId(@PathVariable Long id) {
         try {
             MotoComVeiculoDto motoComVeiculo = motoRepository.findMotoById(id);

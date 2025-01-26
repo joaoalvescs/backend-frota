@@ -18,8 +18,12 @@ import com.joao.backend_frota.dto.CarroVeiculoDto;
 import com.joao.backend_frota.repositories.CarroRepository;
 import com.joao.backend_frota.repositories.VeiculoRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/carro")
+@Tag(name = "Carro", description = "Gerenciamento de Carros")
 public class CarroController {
 
     @Autowired
@@ -28,6 +32,7 @@ public class CarroController {
     @Autowired
     private VeiculoRepository veiculoRepository;
 
+    @Operation(summary = "Consultar todos os carros.", description = "Consulta todos os carros cadastrados.")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CarroComVeiculoDto>> consultarTodosCarrosComVeiculo() {
         try {
@@ -39,6 +44,7 @@ public class CarroController {
         }
     }
 
+    @Operation(summary = "Criar um carro.", description = "Cria um carro específico com quantidade de portas e tipo de combustível.")
     @PostMapping(value = "/criar", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> criarCarroComVeiculo(@RequestBody CarroVeiculoDto request) {
         try {
@@ -72,6 +78,7 @@ public class CarroController {
         }
     }
 
+    @Operation(summary = "Atualizar um carro específico.", description = "Atualiza um carro pelo ID junto com os atributos de carro e veículo.")
     @PutMapping(value = "/atualizar", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> atualizarCarroComVeiculo(@RequestBody CarroVeiculoDto request) {
         try {
@@ -110,6 +117,7 @@ public class CarroController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Consultar um carro pelo ID.", description = "Consulta um carro pelo ID e retorna os atributos de carro e veículo.")
     public ResponseEntity<CarroComVeiculoDto> consultarCarroPorId(@PathVariable Long id) {
         try {
             CarroComVeiculoDto carroComVeiculo = carroRepository.findCarroById(id);
