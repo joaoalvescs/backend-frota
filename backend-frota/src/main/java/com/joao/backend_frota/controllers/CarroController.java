@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.joao.backend_frota.dto.CarroComVeiculoDto;
 import com.joao.backend_frota.dto.CarroVeiculoDto;
+import com.joao.backend_frota.dto.MotoComVeiculoDto;
 import com.joao.backend_frota.models.Carro;
 import com.joao.backend_frota.repositories.CarroRepository;
 import com.joao.backend_frota.repositories.VeiculoRepository;
@@ -27,11 +29,12 @@ public class CarroController {
     private VeiculoRepository veiculoRepository;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Carro>> consultarTodosCarros() {
+    public ResponseEntity<List<CarroComVeiculoDto>> consultarTodosCarrosComVeiculo() {
         try {
-            List<Carro> carros = carroRepository.findAllCarros();
-            return ResponseEntity.ok(carros);
+            List<CarroComVeiculoDto> carrosComVeiculo = carroRepository.findAllCarrosWithVeiculo();
+            return ResponseEntity.ok(carrosComVeiculo);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(null);
         }
     }
