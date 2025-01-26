@@ -59,4 +59,15 @@ public interface VeiculoRepository extends org.springframework.data.repository.C
 
     @Query(value = "SELECT LAST_INSERT_ID()", nativeQuery = true)
     Long getLastInsertedId();
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE veiculo SET modelo = :modelo, fabricante = :fabricante, ano = :ano, preco = :preco WHERE id = :veiculoId", nativeQuery = true)
+    void updateVeiculo(String modelo, String fabricante, int ano, double preco, Long veiculoId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE veiculo SET modelo = :modelo, fabricante = :fabricante, ano = :ano, preco = :preco WHERE id = :veiculoId", nativeQuery = true)
+    void updateVeiculo(Long veiculoId, String modelo, String fabricante, int ano, double preco);
+
 }

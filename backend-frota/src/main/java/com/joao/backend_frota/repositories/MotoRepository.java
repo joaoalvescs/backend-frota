@@ -20,5 +20,10 @@ public interface MotoRepository extends org.springframework.data.repository.Crud
     @Transactional
     @Query(value = "INSERT INTO moto (cilindrada, veiculo_id) VALUES (:cilindrada, :veiculoId)", nativeQuery = true)
     void insertMoto(int cilindrada, Long veiculoId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE moto SET cilindrada = :cilindrada WHERE id = :motoId", nativeQuery = true)
+    void updateMoto(int cilindrada, Long motoId);
 }
 

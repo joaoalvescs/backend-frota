@@ -23,4 +23,10 @@ public interface CarroRepository extends org.springframework.data.repository.Cru
     @Transactional
     @Query(value = "INSERT INTO carro (quantidade_portas, tipo_combustivel, veiculo_id, fabricante, modelo) VALUES (:quantidadePortas, :tipoCombustivel, :veiculoId, :fabricante, :modelo)", nativeQuery = true)
     void insertCarro(int quantidadePortas, String tipoCombustivel, Long veiculoId, String fabricante, String modelo);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE carro SET quantidade_portas = :quantidadePortas, tipo_combustivel = :tipoCombustivel WHERE id = :carroId", nativeQuery = true)
+    void updateCarro(Long carroId, int quantidadePortas, String tipoCombustivel);
+
 }
