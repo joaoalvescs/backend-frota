@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joao.backend_frota.dto.MotoComVeiculoDto;
@@ -32,7 +33,7 @@ public class MotoController {
     @Autowired
     private VeiculoRepository veiculoRepository;
 
-     @Operation(summary = "Consultar todas as motos", description = "Consulta todos as motos cadastradas.")
+    @Operation(summary = "Consultar todas as motos", description = "Consulta todos as motos cadastradas.")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MotoComVeiculoDto>> consultarTodosMotosComVeiculo() {
         try {
@@ -116,6 +117,30 @@ public class MotoController {
             } else {
                 return ResponseEntity.status(404).body(null);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @Operation(summary = "Filtrar motos por ano, modelo e fabricante.", description = "Filtra motos por ano, modelo e fabricante do veículo associado.")
+    @GetMapping(value = "/filtrar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MotoComVeiculoDto>> filtrarMotos(
+        @RequestParam(required = false) String modelo,
+        @RequestParam(required = false) String fabricante,
+        @RequestParam(required = false) String ano
+    ) {
+        try {
+            // Log para verificar os parâmetros recebidos
+            // System.out.println("Filtro aplicado - Modelo: " + modelo + ", Fabricante: " + fabricante + ", Ano: " + ano);
+
+            List<MotoComVeiculoDto> motosComVeiculo = motoRepository.filtrarMotos(modelo, fabricante, ano);
+
+            if (motosComVeiculo.isEmpty()) {
+                System.out.println("Nenhuma moto encontrada.");
+            }
+
+            return ResponseEntity.ok(motosComVeiculo);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(null);
