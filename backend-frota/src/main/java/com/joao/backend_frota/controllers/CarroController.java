@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.joao.backend_frota.dto.CarroVeiculoDto;
 import com.joao.backend_frota.models.Carro;
 import com.joao.backend_frota.repositories.CarroRepository;
-import com.joao.backend_frota.repositories.VeiculoRepository; // Certifique-se de importar o VeiculoRepository
+import com.joao.backend_frota.repositories.VeiculoRepository;
 
 @RestController
 @RequestMapping("/carro")
@@ -24,7 +24,7 @@ public class CarroController {
     private CarroRepository carroRepository;
 
     @Autowired
-    private VeiculoRepository veiculoRepository;  // Injetando o VeiculoRepository
+    private VeiculoRepository veiculoRepository;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Carro>> consultarTodosCarros() {
@@ -43,10 +43,8 @@ public class CarroController {
                 return ResponseEntity.badRequest().body("Carro ou Veículo não fornecidos.");
             }
 
-            // Converte o ano de String para int
             int ano = Integer.parseInt(request.getVeiculo().getAno());
 
-            // Inserir Veículo
             veiculoRepository.insertVeiculo(
                     request.getVeiculo().getModelo(),
                     request.getVeiculo().getFabricante(),
@@ -54,16 +52,14 @@ public class CarroController {
                     request.getVeiculo().getPreco()
             );
 
-            // Recuperar o ID do Veículo recém-criado
             Long veiculoId = veiculoRepository.getLastInsertedId();
 
-            // Inserir Carro com modelo
             carroRepository.insertCarro(
                     request.getCarro().getQuantidadePortas(),
                     request.getCarro().getTipoCombustivel(),
                     veiculoId,
-                    request.getVeiculo().getFabricante(), // Passando o fabricante
-                    request.getVeiculo().getModelo() // Passando o modelo
+                    request.getVeiculo().getFabricante(), 
+                    request.getVeiculo().getModelo()
             );
 
             return ResponseEntity.ok("Carro e veículo criados com sucesso.");

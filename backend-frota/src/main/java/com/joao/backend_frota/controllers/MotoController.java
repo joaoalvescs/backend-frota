@@ -1,8 +1,6 @@
 package com.joao.backend_frota.controllers;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.joao.backend_frota.dto.MotoComVeiculoDto;
 import com.joao.backend_frota.dto.MotoVeiculoDto;
-import com.joao.backend_frota.models.Moto;
 import com.joao.backend_frota.repositories.MotoRepository;
 import com.joao.backend_frota.repositories.VeiculoRepository;
 
@@ -29,12 +27,12 @@ public class MotoController {
     private VeiculoRepository veiculoRepository;
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Moto>> consultarTodosMotos() {
+    public ResponseEntity<List<MotoComVeiculoDto>> consultarTodosMotosComVeiculo() {
         try {
-            List<Moto> motos = StreamSupport.stream(motoRepository.findAll().spliterator(), false)
-                                            .collect(Collectors.toList());
-            return ResponseEntity.ok(motos);
+            List<MotoComVeiculoDto> motosComVeiculo = motoRepository.findAllMotosWithVeiculo();
+            return ResponseEntity.ok(motosComVeiculo);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(null);
         }
     }
@@ -51,7 +49,7 @@ public class MotoController {
             veiculoRepository.insertVeiculo(
                     request.getVeiculo().getModelo(),
                     request.getVeiculo().getFabricante(),
-                    ano,  
+                    ano,
                     request.getVeiculo().getPreco()
             );
 

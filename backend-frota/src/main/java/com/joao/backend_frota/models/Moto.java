@@ -40,7 +40,6 @@ public class Moto implements Serializable {
     }
 
     public void setVeiculoId(Long id2) {
-      // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'setVeiculoId'");
     }
 }
