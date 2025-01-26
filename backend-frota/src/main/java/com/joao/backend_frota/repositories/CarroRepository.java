@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,7 @@ public interface CarroRepository extends org.springframework.data.repository.Cru
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO carro (quantidade_portas, tipo_combustivel, veiculo_id, fabricante, modelo) VALUES (:quantidadePortas, :tipoCombustivel, :veiculoId, :fabricante, :modelo)", nativeQuery = true)
+    @Query(value = "INSERT INTO carro (quantidade_portas, tipo_combustivel, veiculo_id) VALUES (:quantidadePortas, :tipoCombustivel, :veiculoId)", nativeQuery = true)
     void insertCarro(int quantidadePortas, String tipoCombustivel, Long veiculoId, String fabricante, String modelo);
 
     @Modifying
@@ -29,4 +30,9 @@ public interface CarroRepository extends org.springframework.data.repository.Cru
     @Query(value = "UPDATE carro SET quantidade_portas = :quantidadePortas, tipo_combustivel = :tipoCombustivel WHERE id = :carroId", nativeQuery = true)
     void updateCarro(Long carroId, int quantidadePortas, String tipoCombustivel);
 
+    @Query(value = "SELECT c.id AS carroId, c.quantidade_portas AS quantidadePortas, " +
+        "c.tipo_combustivel AS tipoCombustivel, v.id AS veiculoId, v.modelo AS modelo, " +
+        "v.fabricante AS fabricante, v.ano AS ano, v.preco AS preco " +
+        "FROM carro c JOIN veiculo v ON c.veiculo_id = v.id WHERE c.id = :id", nativeQuery = true)
+    CarroComVeiculoDto findCarroById(@Param("id") Long id);
 }

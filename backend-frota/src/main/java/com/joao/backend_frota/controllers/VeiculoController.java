@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import com.joao.backend_frota.dto.VeiculoDto;
 import com.joao.backend_frota.models.Veiculo;
 import com.joao.backend_frota.repositories.VeiculoRepository;
 
@@ -83,6 +84,28 @@ public class VeiculoController {
         try {
             List<Veiculo> veiculos = veiculoRepository.filtrarVeiculos(modelo, fabricante, ano);
             return ResponseEntity.ok(veiculos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<VeiculoDto> consultarVeiculoPorId(@PathVariable Long id) {
+        try {
+            Veiculo veiculo = veiculoRepository.findVeiculoById(id);
+            if (veiculo == null) {
+                return ResponseEntity.status(404).body(null);
+            }
+
+            VeiculoDto veiculoDto = new VeiculoDto();
+            veiculoDto.setVeiculoId(veiculo.getId());
+            veiculoDto.setModelo(veiculo.getModelo());
+            veiculoDto.setFabricante(veiculo.getFabricante());
+            veiculoDto.setAno(veiculo.getAno());
+            veiculoDto.setPreco(veiculo.getPreco());
+
+            return ResponseEntity.ok(veiculoDto);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(null);

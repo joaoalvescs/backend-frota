@@ -70,4 +70,6 @@ public interface VeiculoRepository extends org.springframework.data.repository.C
     @Query(value = "UPDATE veiculo SET modelo = :modelo, fabricante = :fabricante, ano = :ano, preco = :preco WHERE id = :veiculoId", nativeQuery = true)
     void updateVeiculo(Long veiculoId, String modelo, String fabricante, int ano, double preco);
 
+    @Query(value = "SELECT * FROM veiculo WHERE id = :id", nativeQuery = true)
+    Veiculo findVeiculoById(@Param("id") Long id);
 }

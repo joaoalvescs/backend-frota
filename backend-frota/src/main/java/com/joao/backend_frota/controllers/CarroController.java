@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -105,6 +106,21 @@ public class CarroController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Erro ao atualizar carro e veículo: " + e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CarroComVeiculoDto> consultarCarroPorId(@PathVariable Long id) {
+        try {
+            CarroComVeiculoDto carroComVeiculo = carroRepository.findCarroById(id);
+            if (carroComVeiculo != null) {
+                return ResponseEntity.ok(carroComVeiculo);
+            } else {
+                return ResponseEntity.status(404).body(null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
         }
     }
 }
