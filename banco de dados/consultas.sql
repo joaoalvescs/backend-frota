@@ -31,9 +31,9 @@ DROP TABLE IF EXISTS `veiculo`;
 -- Criar a tabela de veículos
 CREATE TABLE `veiculo` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `ano` VARCHAR(255) NOT NULL,
-  `fabricante` VARCHAR(255) NOT NULL,
   `modelo` VARCHAR(255) NOT NULL,
+  `fabricante` VARCHAR(255) NOT NULL,
+  `ano` VARCHAR(255) NOT NULL,
   `preco` DOUBLE NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -41,8 +41,6 @@ CREATE TABLE `veiculo` (
 -- Criar a tabela de carros com relacionamento 1:N para veículo
 CREATE TABLE `carro` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `fabricante` VARCHAR(255) NOT NULL,
-  `modelo` VARCHAR(255) NOT NULL,
   `quantidade_portas` INT NOT NULL,
   `tipo_combustivel` VARCHAR(255) NOT NULL,
   `veiculo_id` BIGINT NOT NULL, -- Chave estrangeira para veículo
@@ -79,4 +77,9 @@ WHERE veiculo_id = 1;
 SELECT * 
 FROM moto 
 WHERE veiculo_id = 1;
+
+INSERT INTO `frota-db`.carro(quantidade_portas, tipo_combustivel, veiculo_id) VALUES
+(4, 'Flex', 1), -- Relacionado ao veículo com id 1
+(4, 'Gasolina', 2); -- Relacionado ao veículo com id 2
+
 

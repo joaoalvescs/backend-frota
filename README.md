@@ -1,9 +1,6 @@
-
 # CRUD Frota
 
 A empresa XWZ precisa de um sistema simples para gerenciar veículos de uma frota, classificando-os em duas categorias: carros e motos. Os veículos possuem informações comuns, mas também características específicas de cada tipo.
-
-
 
 ## Executar backend
 
@@ -25,60 +22,36 @@ Para executar a aplicação em um browser, digite o endereço:
   http://localhost:8080/veiculo/all
 ```
 
+## CRUD API Frota
 
-## Rotas da API Veículos
+Para abrir o Swagger da aplicação em um browser, digite o endereço:
 
-#### Consultar todos veículos.
-
-```http
-  GET /veiculo/all
+```bash
+  http://localhost:8080/swagger-ui/index.html#/
 ```
 
-#### Criar um veículo.
+Foi utilizado o aplicativo Postman para requisição das rotas:
 
-```http
-  POST /veiculo/atualizar/{id}
+```bash
+  https://www.postman.com/downloads/
 ```
 
-| Parâmetro | Tipo     | Descrição                       |
-| :-------- | :------- | :-------------------------------- |
-| `modelo`      | `string` | **Obrigatório**.  |
-| `fabricante`      | `string` | **Obrigatório**.  |
-| `ano`      | `string` | **Obrigatório**.  |
-| `preço`      | `int` | **Obrigatório**.  |
+Para executar ambiente no Postman, abra:
 
-#### Atualizar um veículo.
+#### consultas.postman_collection.json
 
-```http
-  PUT /veiculo/criar/{id}
+```bash
+backend-frota/
+│
+├── backend-frota/ -> Local de todos os arquivos da API.
+├── banco de dados/ -> Local de todo o banco de dados MySQL e suas consultas.
+├── consultas.postman_collection.json -> Ambiente de requisição de rotas do Postman.
 ```
 
-| Parametro | Tipo    | Descrição                       |
-| :-------- | :------- | :-------------------------------- |
-| `modelo`      | `string` | **Obrigatório**.  |
-| `fabricante`      | `string` | **Obrigatório**.  |
-| `ano`      | `string` | **Obrigatório**.  |
-| `preço`      | `int` | **Obrigatório**.  |
+## 🚀 Finalizado!!!
 
-#### Apagar um veículo.
+Qualquer dúvidas estou à disposição através do e-mail:
 
-```http
-  DELETE /veiculo/apagar/${id}
-```
+joaoalves.cs@gmail.com
 
-| Parâmetro | Tipo     | Descrição                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `int` | **Obrigatório**. |
-
-
-#### Filtra veículos por modelo, fabricante ou ano.
-
-```http
-  GET /veiculo/all
-```
-
-| Parâmetro | Tipo     | Descrição                       |
-| :-------- | :------- | :-------------------------------- |
-| `modelo`      | `string` | **Não obrigatório**.  |
-| `fabricante`      | `string` | **Não obrigatório**.  |
-| `ano`      | `string` | **Não obrigatório**.  |
+## 👊🏻 Obrigado!!!
