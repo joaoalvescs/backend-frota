@@ -43,14 +43,25 @@ public interface VeiculoRepository extends org.springframework.data.repository.C
         @Param("preco") double preco
     );
 
-    @Query(value = "SELECT * FROM veiculo WHERE (:modelo IS NULL OR modelo LIKE %:modelo%)" +
-                " AND (:fabricante IS NULL OR fabricante LIKE %:fabricante%)" +
-                " AND (:ano IS NULL OR ano LIKE %:ano%)", nativeQuery = true)
+    @Query(value = "SELECT * FROM veiculo v " +
+            "WHERE (:modelo IS NULL OR LOWER(v.modelo) LIKE LOWER(CONCAT('%', :modelo, '%'))) " +
+            "AND (:fabricante IS NULL OR LOWER(v.fabricante) LIKE LOWER(CONCAT('%', :fabricante, '%'))) " +
+            "AND (:ano IS NULL OR CAST(v.ano AS TEXT) LIKE CONCAT('%', :ano, '%'))", 
+            nativeQuery = true)
     List<Veiculo> filtrarVeiculos(
         @Param("modelo") String modelo, 
         @Param("fabricante") String fabricante, 
         @Param("ano") String ano
     );
+
+    @Query(value = "SELECT * FROM veiculo v " +
+            "WHERE (:termo IS NULL OR (" +
+            "LOWER(v.modelo) LIKE LOWER(CONCAT('%', :termo, '%')) OR " +
+            "LOWER(v.fabricante) LIKE LOWER(CONCAT('%', :termo, '%')) OR " +
+            "CAST(v.ano AS CHAR) LIKE CONCAT('%', :termo, '%')" +
+            "))", 
+            nativeQuery = true)
+    List<Veiculo> pesquisarVeiculos(@Param("termo") String termo);
 
     @Modifying
     @Transactional

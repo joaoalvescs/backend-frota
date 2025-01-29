@@ -1,6 +1,8 @@
 package com.joao.backend_frota.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -83,16 +84,26 @@ public class VeiculoController {
         }
     }
 
-    @Operation(summary = "Filtrar veículos pelas suas características.", description = "Filtra veículos por ano, modelo e fabricante.")
-    @GetMapping(value = "/filtrar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Veiculo>> filtrarVeiculos(
-        @RequestParam(required = false) String modelo,
-        @RequestParam(required = false) String fabricante,
-        @RequestParam(required = false) String ano
-    ) {
+    @Operation(summary = "Pesquisa veículos usando vários atributos.", 
+            description = "Pesquisa veículos por modelo, fabricante e ano em uma única string.")
+    @PostMapping(value = "/pesquisar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Veiculo>> pesquisarVeiculos(@RequestBody Map<String, String> body) {
+        String termo = body.get("termo");
+        if (termo == null || termo.isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
         try {
-            List<Veiculo> veiculos = veiculoRepository.filtrarVeiculos(modelo, fabricante, ano);
-            return ResponseEntity.ok(veiculos);
+            String[] termos = termo.split(" ");
+
+            List<Veiculo> resultados = new ArrayList<>();
+            for (String t : termos) {
+                resultados.addAll(veiculoRepository.pesquisarVeiculos(t));
+            }
+
+            List<Veiculo> distinctResultados = resultados.stream().distinct().toList();
+
+            return ResponseEntity.ok(distinctResultados);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(null);
