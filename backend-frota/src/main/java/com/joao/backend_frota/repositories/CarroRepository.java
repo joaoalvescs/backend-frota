@@ -36,16 +36,16 @@ public interface CarroRepository extends org.springframework.data.repository.Cru
         "FROM carro c JOIN veiculo v ON c.veiculo_id = v.id WHERE c.id = :id", nativeQuery = true)
     CarroComVeiculoDto findCarroById(@Param("id") Long id);
 
-
     @Query(value = "SELECT c.id AS carroId, c.quantidade_portas AS quantidadePortas, " +
         "c.tipo_combustivel AS tipoCombustivel, v.id AS veiculoId, v.modelo AS modelo, " +
         "v.fabricante AS fabricante, v.ano AS ano, v.preco AS preco " +
         "FROM carro c JOIN veiculo v ON c.veiculo_id = v.id " +
-        "WHERE (:modelo IS NULL OR v.modelo LIKE %:modelo%) " +
-        "AND (:fabricante IS NULL OR v.fabricante LIKE %:fabricante%) " +
-        "AND (:ano IS NULL OR v.ano = :ano)", nativeQuery = true)
-    List<CarroComVeiculoDto> findCarrosByFiltro(@Param("modelo") String modelo, 
-                                                @Param("fabricante") String fabricante, 
-                                                @Param("ano") Integer ano);
-
+        "WHERE (:termo IS NULL OR (" +
+        "LOWER(v.modelo) LIKE LOWER(CONCAT('%', :termo, '%')) OR " +
+        "LOWER(v.fabricante) LIKE LOWER(CONCAT('%', :termo, '%')) OR " +
+        "CAST(v.ano AS CHAR) LIKE CONCAT('%', :termo, '%') OR " +
+        "CAST(c.quantidade_portas AS CHAR) LIKE CONCAT('%', :termo, '%') OR " +
+        "LOWER(c.tipo_combustivel) LIKE LOWER(CONCAT('%', :termo, '%'))" +
+        "))", nativeQuery = true)
+    List<CarroComVeiculoDto> pesquisarCarros(@Param("termo") String termo);
 }

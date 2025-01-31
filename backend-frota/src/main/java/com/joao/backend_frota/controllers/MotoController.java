@@ -1,8 +1,11 @@
 package com.joao.backend_frota.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joao.backend_frota.dto.MotoComVeiculoDto;
@@ -123,27 +125,33 @@ public class MotoController {
         }
     }
 
-    @Operation(summary = "Filtrar motos por ano, modelo e fabricante.", description = "Filtra motos por ano, modelo e fabricante do veículo associado.")
-    @GetMapping(value = "/filtrar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MotoComVeiculoDto>> filtrarMotos(
-        @RequestParam(required = false) String modelo,
-        @RequestParam(required = false) String fabricante,
-        @RequestParam(required = false) String ano
-    ) {
+    @Operation(summary = "Pesquisa motos usando vários atributos.", description = "Pesquisa motos por modelo, fabricante, ano e cilindrada em uma única string.")
+    @PostMapping(value = "/pesquisar", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> pesquisarMotos(@RequestBody Map<String, String> body) {
+        String termo = body.get("termo");
+        if (termo == null || termo.isEmpty()) {
+            return ResponseEntity.badRequest().body("O termo de pesquisa não pode estar vazio.");
+        }
+
         try {
-            // Log para verificar os parâmetros recebidos
-            // System.out.println("Filtro aplicado - Modelo: " + modelo + ", Fabricante: " + fabricante + ", Ano: " + ano);
+            String[] termos = termo.split(" ");
 
-            List<MotoComVeiculoDto> motosComVeiculo = motoRepository.filtrarMotos(modelo, fabricante, ano);
-
-            if (motosComVeiculo.isEmpty()) {
-                System.out.println("Nenhuma moto encontrada.");
+            List<MotoComVeiculoDto> resultados = new ArrayList<>();
+            for (String t : termos) {
+                resultados.addAll(motoRepository.pesquisarMotos(t));
             }
 
-            return ResponseEntity.ok(motosComVeiculo);
+            List<MotoComVeiculoDto> distinctResultados = resultados.stream().distinct().toList();
+
+            if (distinctResultados.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nada encontrado!");
+            }
+
+            return ResponseEntity.ok(distinctResultados);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao processar a pesquisa.");
         }
     }
 }

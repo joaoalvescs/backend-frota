@@ -33,15 +33,16 @@ public interface MotoRepository extends org.springframework.data.repository.Crud
         "FROM moto m JOIN veiculo v ON m.veiculo_id = v.id WHERE m.id = :id", nativeQuery = true)
     MotoComVeiculoDto findMotoById(@Param("id") Long id);
 
-    @Query(value = "SELECT m.id AS motoId, m.cilindrada, v.id AS veiculoId, v.modelo, v.fabricante, v.ano, v.preco " +
-                "FROM moto m JOIN veiculo v ON m.veiculo_id = v.id " +
-                "WHERE (:modelo IS NULL OR v.modelo = :modelo) " +
-                "AND (:fabricante IS NULL OR v.fabricante = :fabricante) " +
-                "AND (:ano IS NULL OR v.ano = :ano)", nativeQuery = true)
-    List<MotoComVeiculoDto> filtrarMotos(
-        @Param("modelo") String modelo,
-        @Param("fabricante") String fabricante,
-        @Param("ano") String ano
-    );
+    @Query(value = "SELECT m.id AS motoId, m.cilindrada AS cilindrada, " +
+            "v.id AS veiculoId, v.modelo AS modelo, v.fabricante AS fabricante, " +
+            "v.ano AS ano, v.preco AS preco " +
+            "FROM moto m JOIN veiculo v ON m.veiculo_id = v.id " +
+            "WHERE (:termo IS NULL OR (" +
+            "LOWER(v.modelo) LIKE LOWER(CONCAT('%', :termo, '%')) OR " +
+            "LOWER(v.fabricante) LIKE LOWER(CONCAT('%', :termo, '%')) OR " +
+            "CAST(v.ano AS CHAR) LIKE CONCAT('%', :termo, '%') OR " +
+            "CAST(m.cilindrada AS CHAR) LIKE CONCAT('%', :termo, '%')" +
+            "))", nativeQuery = true)
+    List<MotoComVeiculoDto> pesquisarMotos(@Param("termo") String termo);
 }
 
