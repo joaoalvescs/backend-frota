@@ -43,22 +43,6 @@ public class VeiculoController {
         }
     }
 
-    @Operation(summary = "Criar um veículo.", description = "Cria um veículo específico com os atributos: modelo, fabricante, ano e preço.")
-    @PostMapping(value = "/criar", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> criarVeiculo(@RequestBody Veiculo veiculo) {
-        try {
-            veiculoRepository.criarVeiculo(
-                veiculo.getModelo(),
-                veiculo.getFabricante(),
-                veiculo.getAno(),
-                veiculo.getPreco()
-            );
-            return ResponseEntity.ok("Veículo criado com sucesso.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Erro ao criar veículo.");
-        }
-    }
-
     @Operation(summary = "Apagar um veículo pelo ID.", description = "Apaga um veículo específico pelo ID fornecido.")
     @DeleteMapping(value = "/apagar/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> apagarVeiculo(@PathVariable Long id) {

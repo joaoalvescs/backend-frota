@@ -19,16 +19,6 @@ public interface VeiculoRepository extends org.springframework.data.repository.C
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO veiculo (modelo, fabricante, ano, preco) VALUES (:modelo, :fabricante, :ano, :preco)", nativeQuery = true)
-    void criarVeiculo(
-        @Param("modelo") String modelo, 
-        @Param("fabricante") String fabricante, 
-        @Param("ano") String ano, 
-        @Param("preco") double preco
-    );
-
-    @Modifying
-    @Transactional
     @Query(value = "DELETE FROM veiculo WHERE id = :id", nativeQuery = true)
     void apagarVeiculo(@Param("id") Long id);
 

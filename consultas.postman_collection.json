@@ -44,49 +44,20 @@
 					"response": []
 				},
 				{
-					"name": "Filtrar por ano, modelo e cor",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
+					"name": "Veículo por ID",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{java}}/veiculo/filtrar?modelo=oi&fabricante=oi&ano=1995",
+							"raw": "{{java}}/veiculo/5",
 							"host": [
 								"{{java}}"
 							],
 							"path": [
 								"veiculo",
-								"filtrar"
-							],
-							"query": [
-								{
-									"key": "modelo",
-									"value": "oi"
-								},
-								{
-									"key": "fabricante",
-									"value": "oi"
-								},
-								{
-									"key": "ano",
-									"value": "1995"
-								}
+								"5"
 							]
-						},
-						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+						}
 					},
 					"response": []
 				},
@@ -112,7 +83,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"modelo\": \"Modelo Atualizado\",\n  \"fabricante\": \"Fabricante Atualizado\",\n  \"ano\": \"2023\",\n  \"preco\": 50000.0\n}\n",
+							"raw": "{\"veiculo\":{\n    \"id\":9,\n    \"modelo\":\"XS 207 Passion\",\n    \"fabricante\":\"Peugeot\",\n    \"ano\":\"2012\",\n    \"preco\":25000\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -120,14 +91,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{java}}/veiculo/atualizar/3",
+							"raw": "{{java}}/veiculo/atualizar",
 							"host": [
 								"{{java}}"
 							],
 							"path": [
 								"veiculo",
-								"atualizar",
-								"3"
+								"atualizar"
 							]
 						},
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -155,14 +125,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{java}}/veiculo/apagar/",
+							"raw": "{{java}}/veiculo/apagar/2",
 							"host": [
 								"{{java}}"
 							],
 							"path": [
 								"veiculo",
 								"apagar",
-								""
+								"2"
 							]
 						},
 						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
@@ -170,28 +140,13 @@
 					"response": []
 				},
 				{
-					"name": "Criar um veículo",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Successful POST request\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
+					"name": "Pesquisar veículos",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"modelo\": \"oio\",\n  \"fabricante\": \"l\",\n  \"ano\": \"2023\",\n  \"preco\": 50000.0\n}\n",
+							"raw": "{\n  \"termo\": \"Gol\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -199,32 +154,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{java}}/veiculo/criar",
+							"raw": "{{java}}/veiculo/pesquisar",
 							"host": [
 								"{{java}}"
 							],
 							"path": [
 								"veiculo",
-								"criar"
-							]
-						},
-						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
-					},
-					"response": []
-				},
-				{
-					"name": "Veículo por ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{java}}/veiculo/1",
-							"host": [
-								"{{java}}"
-							],
-							"path": [
-								"veiculo",
-								"1"
+								"pesquisar"
 							]
 						}
 					},
@@ -272,13 +208,72 @@
 					"response": []
 				},
 				{
+					"name": "Pesquisar por ano, modelo e cor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"termo\": \"Honda 2022\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{java}}/moto/pesquisar",
+							"host": [
+								"{{java}}"
+							],
+							"path": [
+								"moto",
+								"pesquisar"
+							],
+							"query": [
+								{
+									"key": "modelo",
+									"value": "MT-03",
+									"disabled": true
+								},
+								{
+									"key": "fabricante",
+									"value": "Yamaha",
+									"disabled": true
+								},
+								{
+									"key": "ano",
+									"value": "2021",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
 					"name": "Atualizar uma moto",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"moto\": {\n        \"id\": 2,\n        \"cilindrada\": 250\n    },\n    \"veiculo\": {\n        \"id\": 3,\n        \"modelo\": \"Modelo Atualizado\",\n        \"fabricante\": \"Fabricante Atualizado\",\n        \"ano\": \"2023\",\n        \"preco\": 15000.00\n    }\n}\n",
+							"raw": "{\n    \"moto\": {\n        \"id\": 7,\n        \"cilindrada\": 250\n    },\n    \"veiculo\": {\n        \"id\": 13,\n        \"modelo\": \"BMW R 12\",\n        \"fabricante\": \"BMW\",\n        \"ano\": \"2024\",\n        \"preco\": 90000.00\n    }\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -305,7 +300,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"moto\": {\n        \"cilindrada\": 150\n    },\n    \"veiculo\": {\n        \"modelo\": \"CG 150\",\n        \"fabricante\": \"Honda\",\n        \"ano\": \"2023\",\n        \"preco\": 15000.00\n    }\n}\n",
+							"raw": "{\n    \"moto\": {\n        \"cilindrada\": 150\n    },\n    \"veiculo\": {\n        \"modelo\": \"CG 150 Ks\",\n        \"fabricante\": \"Honda\",\n        \"ano\": \"2006\",\n        \"preco\": 4000.00\n    }\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -367,13 +362,72 @@
 					"response": []
 				},
 				{
+					"name": "Pesquisar por ano, modelo e corr Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"termo\": \"Civic Honda\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{java}}/carro/pesquisar",
+							"host": [
+								"{{java}}"
+							],
+							"path": [
+								"carro",
+								"pesquisar"
+							],
+							"query": [
+								{
+									"key": "modelo",
+									"value": "Civic",
+									"disabled": true
+								},
+								{
+									"key": "fabricante",
+									"value": "Honda",
+									"disabled": true
+								},
+								{
+									"key": "ano",
+									"value": "2020",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
 					"name": "Atualizar um carro",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"carro\": {\n    \"id\": 2,\n    \"quantidadePortas\": 4,\n    \"tipoCombustivel\": \"Alt\"\n  },\n  \"veiculo\": {\n    \"id\": 10,\n    \"modelo\": \"Civic\",\n    \"fabricante\": \"Alt\",\n    \"ano\": \"2023\",\n    \"preco\": 120000.00\n  }\n}\n",
+							"raw": "{\n  \"carro\": {\n    \"id\": 8,\n    \"quantidadePortas\": 4,\n    \"tipoCombustivel\": \"Flex\"\n  },\n  \"veiculo\": {\n    \"id\": 8,\n    \"modelo\": \"Ka Freestyle\",\n    \"fabricante\": \"Ford\",\n    \"ano\": \"2019\",\n    \"preco\": 40000.00\n  }\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -400,7 +454,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"carro\": {\n        \"quantidadePortas\": 4,\n        \"tipoCombustivel\": \"Gasolina\"\n    },\n    \"veiculo\": {\n        \"modelo\": \"Civic\",\n        \"fabricante\": \"Honda\",\n        \"ano\": \"2023\",\n        \"preco\": 120000.00\n    }\n}",
+							"raw": "{\n    \"carro\": {\n        \"quantidadePortas\": 4,\n        \"tipoCombustivel\": \"Flex\"\n    },\n    \"veiculo\": {\n        \"modelo\": \"Megane\",\n        \"fabricante\": \"Renault\",\n        \"ano\": \"2011\",\n        \"preco\": 120000.00\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
