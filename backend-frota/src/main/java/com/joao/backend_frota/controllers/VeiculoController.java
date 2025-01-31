@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import com.joao.backend_frota.dto.VeiculoDto;
+import com.joao.backend_frota.dto.VeiculoPesquisaDto;
 import com.joao.backend_frota.models.Veiculo;
 import com.joao.backend_frota.repositories.VeiculoRepository;
 
@@ -69,10 +71,16 @@ public class VeiculoController {
     }
 
     @Operation(summary = "Atualizar um veículo específico.", description = "Atualiza um veículo pelo ID e seus atributos.")
-    @PutMapping(value = "/atualizar/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> atualizarVeiculo(@PathVariable Long id, @RequestBody Veiculo veiculo) {
+    @PutMapping(value = "/atualizar", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> atualizarVeiculo(@RequestBody VeiculoPesquisaDto request) {
         try {
-            int resultado = veiculoRepository.atualizarVeiculo(id, veiculo.getModelo(), veiculo.getFabricante(), veiculo.getAno(), veiculo.getPreco());
+            Veiculo veiculo = request.getVeiculo();
+
+            if (veiculo == null) {
+                return ResponseEntity.badRequest().body("Veículo não fornecido.");
+            }
+
+            int resultado = veiculoRepository.atualizarVeiculo(veiculo.getId(), veiculo.getModelo(), veiculo.getFabricante(), veiculo.getAno(), veiculo.getPreco());
 
             if (resultado == 0) {
                 return ResponseEntity.status(404).body("Veículo não encontrado.");
@@ -87,10 +95,10 @@ public class VeiculoController {
     @Operation(summary = "Pesquisa veículos usando vários atributos.", 
             description = "Pesquisa veículos por modelo, fabricante e ano em uma única string.")
     @PostMapping(value = "/pesquisar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Veiculo>> pesquisarVeiculos(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> pesquisarVeiculos(@RequestBody Map<String, String> body) {
         String termo = body.get("termo");
         if (termo == null || termo.isEmpty()) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body("O termo de pesquisa não pode estar vazio.");
         }
 
         try {
@@ -103,10 +111,15 @@ public class VeiculoController {
 
             List<Veiculo> distinctResultados = resultados.stream().distinct().toList();
 
+            if (distinctResultados.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nada encontrado!");
+            }
+
             return ResponseEntity.ok(distinctResultados);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao processar a pesquisa.");
         }
     }
 
